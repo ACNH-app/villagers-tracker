@@ -164,6 +164,8 @@ select {
   gap: 14px;
   overflow-x: auto;
   padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
 }
 
 .summary-grid::-webkit-scrollbar {
@@ -184,12 +186,13 @@ select {
   border: 1px solid rgba(76, 61, 29, 0.08);
   display: grid;
   place-items: start flex-start;
-  width: 100%;
+  min-width: 180px;
   padding: 18px;
   border-radius: var(--radius-lg);
   background: var(--card-strong);
   cursor: pointer;
   text-align: left;
+  flex: 0 0 auto;
   transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
 }
 
@@ -218,6 +221,7 @@ select {
   overflow-x: auto;
   padding-bottom: 2px;
   scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 
 .filter-slider::-webkit-scrollbar {
@@ -606,10 +610,16 @@ select {
 
   .hero,
   .controls-grid,
-  .summary-grid,
   .detail-hero,
   .detail-grid {
     grid-template-columns: 1fr;
+  }
+
+  .summary-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 8px;
   }
 
   .panel,
@@ -633,6 +643,11 @@ select {
 
   .summary-card {
     min-height: 100px;
+  }
+
+  .mini-grid,
+  .card-grid {
+    grid-template-columns: 1fr;
   }
 
   .villager-card {
