@@ -41,9 +41,9 @@ select {
 }
 
 .page-shell {
-  width: min(1440px, calc(100vw - 32px));
+  width: min(1440px, calc(100vw - 24px));
   margin: 0 auto;
-  padding: 32px 0 48px;
+  padding: 24px 0 40px;
 }
 
 .hero {
@@ -66,7 +66,11 @@ select {
 }
 
 .hero-copy {
-  padding: 32px;
+  padding: 24px;
+}
+
+.hero-note {
+  padding: 20px;
 }
 
 .eyebrow {
@@ -155,7 +159,7 @@ select {
 
 .summary-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 14px;
 }
 
@@ -599,6 +603,22 @@ select {
     border-radius: 22px;
   }
 
+  .hero-copy {
+    padding: 20px;
+  }
+
+  .hero-note {
+    padding: 18px;
+  }
+
+  .controls-grid {
+    gap: 12px;
+  }
+
+  .summary-card {
+    min-height: 100px;
+  }
+
   .villager-card {
     grid-template-columns: 72px minmax(0, 1fr);
   }
@@ -613,5 +633,25 @@ select {
   .villager-name-row {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .detail-panel {
+    top: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: calc(100vw - 24px);
+    padding: 18px;
+  }
+
+  .detail-item {
+    padding: 12px;
+  }
+
+  .filter-slider {
+    gap: 8px;
+  }
+
+  .filter-chip {
+    padding: 10px 12px;
   }
 }
