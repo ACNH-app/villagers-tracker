@@ -11,13 +11,7 @@
       <header class="hero">
         <div class="hero-copy">
           <p class="eyebrow">ACNH Villager Tracker</p>
-          <h1>성격과 동물종으로 정리하는 모동숲 주민 도감</h1>
-          <p class="hero-text">
-            주민을 성격별, 동물종별로 나눠서 보고 상세 정보를 확인하면서
-            <strong>위시 주민</strong>, <strong>섬 주민</strong>,
-            <strong>캠핑장 방문</strong>, <strong>이사감</strong>,
-            <strong>사진 선물 받음</strong> 상태를 브라우저에 저장할 수 있습니다.
-          </p>
+          <h1>모동숲 주민도감</h1>
         </div>
         <div class="hero-note">
           <p>저장 위치</p>
@@ -53,19 +47,15 @@
               </select>
             </label>
 
-            <label class="field">
+            <div class="field">
               <span>성격 필터</span>
-              <select id="personalityFilter">
-                <option value="">전체</option>
-              </select>
-            </label>
+              <div id="personalitySlider" class="filter-slider" role="listbox" aria-label="성격 필터"></div>
+            </div>
 
-            <label class="field">
+            <div class="field">
               <span>동물종 필터</span>
-              <select id="speciesFilter">
-                <option value="">전체</option>
-              </select>
-            </label>
+              <div id="speciesSlider" class="filter-slider" role="listbox" aria-label="동물종 필터"></div>
+            </div>
 
             <label class="field">
               <span>상태 필터</span>
@@ -89,11 +79,11 @@
               <p id="listMeta" class="panel-subtext"></p>
             </div>
             <div class="legend">
-              <span><b>W</b> 위시</span>
-              <span><b>I</b> 섬</span>
-              <span><b>C</b> 캠핑</span>
-              <span><b>M</b> 이사감</span>
-              <span><b>P</b> 사진</span>
+              <span><b>❤️</b> 위시</span>
+              <span><b>🏝️</b> 섬</span>
+              <span><b>⛺</b> 캠핑</span>
+              <span><b>🚚</b> 이사감</span>
+              <span><b>📸</b> 사진</span>
             </div>
           </div>
           <div id="groupList" class="group-list"></div>

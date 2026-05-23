@@ -2,11 +2,11 @@ const STORAGE_KEY = "acnh-villager-tracker-state-v1";
 const collator = new Intl.Collator("ko");
 
 const STATUS_META = [
-  { key: "wish", short: "W", label: "위시 주민" },
-  { key: "island", short: "I", label: "섬 주민" },
-  { key: "camping", short: "C", label: "캠핑장 방문" },
-  { key: "movedOut", short: "M", label: "이사간 주민" },
-  { key: "photoGifted", short: "P", label: "사진 선물 받음" },
+  { key: "wish", icon: "❤️", label: "위시 주민" },
+  { key: "island", icon: "🏝️", label: "섬 주민" },
+  { key: "camping", icon: "⛺", label: "캠핑장 방문" },
+  { key: "movedOut", icon: "🚚", label: "이사간 주민" },
+  { key: "photoGifted", icon: "📸", label: "사진 선물 받음" },
 ];
 
 const elements = {
@@ -14,8 +14,8 @@ const elements = {
   resetStorageButton: document.getElementById("resetStorageButton"),
   searchInput: document.getElementById("searchInput"),
   groupBySelect: document.getElementById("groupBySelect"),
-  personalityFilter: document.getElementById("personalityFilter"),
-  speciesFilter: document.getElementById("speciesFilter"),
+  personalitySlider: document.getElementById("personalitySlider"),
+  speciesSlider: document.getElementById("speciesSlider"),
   statusFilter: document.getElementById("statusFilter"),
   activeFilters: document.getElementById("activeFilters"),
   listMeta: document.getElementById("listMeta"),
@@ -66,13 +66,19 @@ function bindEvents() {
     render();
   });
 
-  elements.personalityFilter.addEventListener("change", (event) => {
-    appState.filters.personality = String(event.target.value || "");
+  elements.personalitySlider.addEventListener("click", (event) => {
+    const item = event.target.closest("[data-filter-type='personality']");
+    if (!item) return;
+    const value = String(item.dataset.filterValue || "");
+    appState.filters.personality = appState.filters.personality === value ? "" : value;
     render();
   });
 
-  elements.speciesFilter.addEventListener("change", (event) => {
-    appState.filters.species = String(event.target.value || "");
+  elements.speciesSlider.addEventListener("click", (event) => {
+    const item = event.target.closest("[data-filter-type='species']");
+    if (!item) return;
+    const value = String(item.dataset.filterValue || "");
+    appState.filters.species = appState.filters.species === value ? "" : value;
     render();
   });
 
@@ -87,6 +93,14 @@ function bindEvents() {
     persistToggleState();
     render();
     if (appState.detailId) renderDetail(appState.detailId);
+  });
+
+  elements.summaryGrid.addEventListener("click", (event) => {
+    const cardButton = event.target.closest("[data-summary-status]");
+    if (!cardButton) return;
+    const status = String(cardButton.dataset.summaryStatus || "");
+    appState.filters.status = appState.filters.status === status ? "" : status;
+    render();
   });
 
   elements.groupList.addEventListener("click", (event) => {
@@ -151,13 +165,25 @@ function populateSelectOptions() {
   const personalities = uniqueSorted(appState.villagers.map((villager) => villager.personalityKo));
   const species = uniqueSorted(appState.villagers.map((villager) => villager.speciesKo));
 
-  personalities.forEach((value) => {
-    elements.personalityFilter.appendChild(new Option(value, value));
-  });
+  renderFilterSlider(elements.personalitySlider, personalities, "personality");
+  renderFilterSlider(elements.speciesSlider, species, "species");
+}
 
-  species.forEach((value) => {
-    elements.speciesFilter.appendChild(new Option(value, value));
+function renderFilterSlider(container, values, filterType) {
+  const items = ["전체", ...values].map((value) => {
+    const filterValue = value === "전체" ? "" : value;
+    const active = appState.filters[filterType] === filterValue ? "active" : "";
+    return `
+      <button
+        type="button"
+        class="filter-chip ${active}"
+        data-filter-type="${filterType}"
+        data-filter-value="${escapeHtml(filterValue)}"
+        aria-pressed="${active === "active"}"
+      >${escapeHtml(value)}</button>
+    `;
   });
+  container.innerHTML = items.join("");
 }
 
 function uniqueSorted(values) {
@@ -167,7 +193,17 @@ function uniqueSorted(values) {
 function render() {
   renderSummary();
   renderActiveFilters();
+  renderFilterSliders();
+  elements.statusFilter.value = appState.filters.status;
   renderVillagerGroups();
+}
+
+function renderFilterSliders() {
+  const personalities = uniqueSorted(appState.villagers.map((villager) => villager.personalityKo));
+  const species = uniqueSorted(appState.villagers.map((villager) => villager.speciesKo));
+
+  renderFilterSlider(elements.personalitySlider, personalities, "personality");
+  renderFilterSlider(elements.speciesSlider, species, "species");
 }
 
 function renderSummary() {
@@ -185,22 +221,25 @@ function renderSummary() {
   });
 
   const cards = [
-    { label: "전체 주민", value: total },
-    { label: "위시 주민", value: counts.wish },
-    { label: "섬 주민", value: counts.island },
-    { label: "캠핑장 방문", value: counts.camping },
-    { label: "이사간 주민", value: counts.movedOut },
-    { label: "사진 선물 받음", value: counts.photoGifted },
+    { label: "전체 주민", value: total, status: "" },
+    { label: "위시 주민", value: counts.wish, status: "wish" },
+    { label: "섬 주민", value: counts.island, status: "island" },
+    { label: "캠핑장 방문", value: counts.camping, status: "camping" },
+    { label: "이사간 주민", value: counts.movedOut, status: "movedOut" },
+    { label: "사진 선물 받음", value: counts.photoGifted, status: "photoGifted" },
   ];
 
   elements.summaryGrid.innerHTML = cards
     .map(
-      (card) => `
-        <article class="summary-card">
+      (card) => {
+        const active = appState.filters.status === card.status ? "active" : "";
+        return `
+        <button type="button" class="summary-card ${active}" data-summary-status="${card.status}">
           <span class="label">${escapeHtml(card.label)}</span>
           <strong>${card.value}</strong>
-        </article>
-      `
+        </button>
+      `;
+      }
     )
     .join("");
 }
@@ -289,7 +328,7 @@ function renderVillagerCard(villager) {
         aria-label="${escapeHtml(item.label)}"
         title="${escapeHtml(item.label)}"
       >
-        ${item.short}
+        ${item.icon}
       </button>
     `;
   }).join("");
@@ -333,7 +372,7 @@ function renderDetail(villagerId) {
   const state = getVillagerState(String(villagerId));
   const statusRow = STATUS_META.map((item) => {
     const active = state[item.key] ? "active" : "";
-    return `<button type="button" class="detail-status ${active}" data-villager-id="${villagerId}" data-toggle-key="${item.key}">${escapeHtml(item.label)}</button>`;
+    return `<button type="button" class="detail-status ${active}" data-villager-id="${villagerId}" data-toggle-key="${item.key}" aria-label="${escapeHtml(item.label)}" title="${escapeHtml(item.label)}">${item.icon}</button>`;
   }).join("");
 
   const items = [

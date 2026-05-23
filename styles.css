@@ -160,10 +160,24 @@ select {
 }
 
 .summary-card {
+  appearance: none;
+  border: 1px solid rgba(76, 61, 29, 0.08);
+  display: grid;
+  place-items: start flex-start;
+  width: 100%;
   padding: 18px;
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(76, 61, 29, 0.08);
   background: var(--card-strong);
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.summary-card:hover,
+.summary-card.active {
+  transform: translateY(-1px);
+  border-color: rgba(45, 125, 82, 0.22);
+  background: rgba(239, 243, 232, 0.96);
 }
 
 .summary-card .label {
@@ -176,6 +190,71 @@ select {
   display: block;
   margin-top: 8px;
   font-size: 1.8rem;
+}
+
+.filter-slider {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scroll-snap-type: x mandatory;
+}
+
+.filter-slider::-webkit-scrollbar {
+  height: 8px;
+}
+
+.filter-slider::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.filter-slider::-webkit-scrollbar-thumb {
+  background: rgba(88, 67, 22, 0.24);
+  border-radius: 999px;
+}
+
+.filter-chip {
+  flex: 0 0 auto;
+  min-width: max-content;
+  padding: 10px 14px;
+  border: 1px solid rgba(88, 67, 22, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 252, 247, 0.98);
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+  scroll-snap-align: start;
+}
+
+.filter-chip.active {
+  background: rgba(229, 247, 231, 0.98);
+  border-color: rgba(45, 125, 82, 0.18);
+  color: var(--green);
+}
+
+.toggle-button,
+.detail-status {
+  min-width: 34px;
+  min-height: 34px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.detail-status {
+  border: 1px solid rgba(88, 67, 22, 0.12);
+  background: rgba(255, 252, 247, 0.98);
+}
+
+.detail-status.active {
+  background: rgba(229, 247, 231, 0.98);
+  color: var(--green);
+  font-weight: 700;
 }
 
 .controls-grid {
